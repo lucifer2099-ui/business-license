@@ -97,7 +97,13 @@ class ChnCorpus(Corpus):
                 keys = key.split('，')
                 if any([e in company_name for e in keys]):
                     # print(''.join([e for e in keys]) + 'in ' + company_name)
-                    result = random.sample(value, random.randint(min(4, counts), min(8, counts)))
+                    num_items = len(value)
+                    # Use num_items as the upper bound for sampling if it's smaller than the intended range
+                    sample_size = random.randint(min(4, num_items), min(8, num_items))
+                    # Ensure sample_size is at least 1 if value is not empty, though random.randint(a,b) where a=b is fine.
+                    # If num_items < 4, min(4, num_items) is num_items. min(8, num_items) is num_items.
+                    # So sample_size will be num_items.
+                    result = random.sample(value, sample_size)
                     return '，'.join(result)
             print(company_name + 'does not have business scopes.\n')
             raise Exception

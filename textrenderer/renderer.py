@@ -350,7 +350,8 @@ class Renderer(object):
         word_height = word_size[1]
         word_width = word_size[0]
 
-        offset = font.getoffset(word)
+        bbox = font.getbbox(word)
+        offset = (bbox[0], bbox[1])
 
         pil_img = Image.fromarray(np.uint8(bg))
         draw = ImageDraw.Draw(pil_img)
@@ -399,7 +400,8 @@ class Renderer(object):
         word_height = word_size[1]
         word_width = word_size[0]
 
-        offset = font.getoffset(word)
+        bbox = font.getbbox(word)
+        offset = (bbox[0], bbox[1])
 
         pil_img = Image.fromarray(np.uint8(bg))
         draw = ImageDraw.Draw(pil_img)
@@ -496,7 +498,8 @@ class Renderer(object):
         chars_size = []
         y_offset = 10 ** 5
         for c in word:
-            size = font.getsize(c)
+            bbox = font.getbbox(c)
+            size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
             chars_size.append(size)
 
             width += size[0]
@@ -506,7 +509,7 @@ class Renderer(object):
 
             # Min chars y offset as word y offset
             # Assume only y offset
-            c_offset = font.getoffset(c)
+            c_offset = (bbox[0], bbox[1])
             if c_offset[1] < y_offset:
                 y_offset = c_offset[1]
 
@@ -681,9 +684,8 @@ class Renderer(object):
         :return:
             size: word size, removed offset (width, height)
         """
-        offset = font.getoffset(word)
-        size = font.getsize(word)
-        size = (size[0] - offset[0], size[1] - offset[1])
+        bbox = font.getbbox(word)
+        size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
         return size
 
     def apply_perspective_transform(self, img, text_box_pnts, max_x, max_y, max_z, gpu=False):
