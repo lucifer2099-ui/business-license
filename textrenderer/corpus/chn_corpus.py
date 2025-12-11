@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import yaml
+import os
 from easydict import EasyDict
 from libs.utils import load_chars
 import glob
@@ -47,7 +48,7 @@ class ChnCorpus(Corpus):
         self.load_corpus_path(self.corpus_dir)
 
         for i, p in enumerate(self.corpus_path):
-            corpus_type = p.split('/')[-1].split('.')[0]
+            corpus_type = os.path.splitext(os.path.basename(p))[0]
             print_end = '\n' if i == len(self.corpus_path) - 1 else '\r'
             print("Loading chn corpus: {}/{}".format(i + 1, len(self.corpus_path)), end=print_end)
             with open(p, encoding='utf-8') as f:
